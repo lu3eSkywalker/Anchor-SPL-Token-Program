@@ -1,11 +1,15 @@
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::{self, AssociatedToken};
-use anchor_spl::token::{self, mint_to, transfer, Mint, MintTo, Token, TokenAccount, Transfer};
+use anchor_spl::token::{
+    self, burn, mint_to, transfer, Burn, Mint, MintTo, Token, TokenAccount, Transfer,
+};
 
 declare_id!("DFgLLrCx9AUxiE3Bn619pdDwXLfiUZBTxDrNWhQiKwNZ");
 
 #[program]
 pub mod spl_token {
+    use anchor_spl::token::burn;
+
     use super::*;
 
     pub fn create_token_mint(ctx: Context<CreateTokenMint>) -> Result<()> {
@@ -31,6 +35,19 @@ pub mod spl_token {
         };
         let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
         transfer(cpi_ctx, amount)?;
+        Ok(())
+    }
+
+    pub fn burn_tokens(ctx: Context<BurnTokens>, amount: u64) -> Result<()> {
+        let cpi_accounts = Burn {
+            from: ctx.accounts.from_token_account.to_account_info(),
+            mint: ctx.accounts.mint.to_account_info(),
+            authority: ctx.accounts.authority.to_account_info(),
+        };
+
+        let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
+
+        burn(cpi_ctx, amount);
         Ok(())
     }
 }
@@ -107,4 +124,17 @@ pub struct TransferTokens<'info> {
     pub rent: Sysvar<'info, Rent>,
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
+}
+
+#[derive(Accounts)]
+pub struct BurnTokens<'info> {
+    #[account(mut)]
+    pub from_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub mint: Account<'info, Mint>,
+
+    pub authority: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
 }
