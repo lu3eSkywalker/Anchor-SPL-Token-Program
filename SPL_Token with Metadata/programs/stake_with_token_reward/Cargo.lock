@@ -226,6 +226,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3c08cb5d762c0694f74bd02c9a5b04ea53cefc496e2c27b3234acffca5cd076b"
 dependencies = [
  "anchor-lang",
+ "mpl-token-metadata",
  "spl-associated-token-account",
  "spl-pod",
  "spl-token 7.0.0",
@@ -2468,17 +2469,6 @@ dependencies = [
 
 [[package]]
 name = "spl-token"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "mpl-core",
- "mpl-token-metadata",
- "solana-program",
-]
-
-[[package]]
-name = "spl-token"
 version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed320a6c934128d4f7e54fe00e16b8aeaecf215799d060ae14f93378da6dc834"
@@ -2490,6 +2480,34 @@ dependencies = [
  "num_enum",
  "solana-program",
  "thiserror 1.0.69",
+]
+
+[[package]]
+name = "spl-token"
+version = "8.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "053067c6a82c705004f91dae058b11b4780407e9ccd6799dc9e7d0fab5f242da"
+dependencies = [
+ "arrayref",
+ "bytemuck",
+ "num-derive 0.4.2",
+ "num-traits",
+ "num_enum",
+ "solana-account-info",
+ "solana-cpi",
+ "solana-decode-error",
+ "solana-instruction",
+ "solana-msg",
+ "solana-program-entrypoint",
+ "solana-program-error",
+ "solana-program-memory",
+ "solana-program-option",
+ "solana-program-pack",
+ "solana-pubkey",
+ "solana-rent",
+ "solana-sdk-ids",
+ "solana-sysvar",
+ "thiserror 2.0.12",
 ]
 
 [[package]]
@@ -2638,6 +2656,18 @@ dependencies = [
  "spl-discriminator",
  "spl-pod",
  "thiserror 1.0.69",
+]
+
+[[package]]
+name = "spl_token_mint_and_metadata"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "mpl-core",
+ "mpl-token-metadata",
+ "solana-program",
+ "spl-token 8.0.0",
 ]
 
 [[package]]

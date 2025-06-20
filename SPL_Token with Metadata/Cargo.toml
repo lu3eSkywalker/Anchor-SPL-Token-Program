@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "programs/spl_token"
+    "programs *"
 ]
 resolver = "2"
 

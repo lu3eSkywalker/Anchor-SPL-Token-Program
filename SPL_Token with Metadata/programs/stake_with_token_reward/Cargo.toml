@@ -1,12 +1,12 @@
 [package]
-name = "spl-token"
+name = "spl_token_mint_and_metadata"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "spl_token"
+name = "spl_token_mint_and_metadata"
 
 [workspace]
 resolver = "2"
@@ -21,7 +21,8 @@ idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
 
 [dependencies]
 anchor-lang = { version = "0.31.1", features = ["init-if-needed"] }
-anchor-spl = "0.31.1"
+anchor-spl = { version = "0.31.1", features = ["metadata"] }
 solana-program = "2.3.0"
 mpl-core = "0.10.0"
-mpl-token-metadata = { version = "5.1.0"}
+mpl-token-metadata = { version = "5.1.0" }
+spl-token = "8.0.0"

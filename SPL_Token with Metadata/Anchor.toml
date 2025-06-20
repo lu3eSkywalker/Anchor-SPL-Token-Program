@@ -1,13 +1,11 @@
 [toolchain]
-package_manager = "yarn"
 
 [features]
 resolution = true
 skip-lint = false
 
-[programs.localnet]
-# new_contract = "GzxTdMYV51xQkJ5DTzWXij2kXZMibXWCg6JZJULEouXS"
-spl_token = "A1DwTAisxvTXSAKDFQnvtY1uVXjLgiuw2pYqQF2pk3VH"
+[programs.devnet]
+spl_token_mint_and_metadata = "4wFum6NEKsgXZkYUiPjA2ECWj3Wjb4tYbC4yte4GBagB"
 
 [registry]
 url = "https://api.apr.dev"
