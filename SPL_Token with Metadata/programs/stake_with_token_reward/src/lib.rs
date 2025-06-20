@@ -5,10 +5,10 @@ use anchor_spl::{
         create_metadata_accounts_v3, mpl_token_metadata::types::DataV2, CreateMetadataAccountsV3,
         Metadata as Metaplex,
     },
-    token::{mint_to, Mint, MintTo, Token, TokenAccount},
+    token::{mint_to, transfer, burn, Mint, MintTo, Transfer, Burn, Token, TokenAccount},
 };
 
-declare_id!("4wFum6NEKsgXZkYUiPjA2ECWj3Wjb4tYbC4yte4GBagB");
+declare_id!("DngBV6YuyztBJucqPHTTHtTuk99jDc1yv7y8SQQKA53s");
 
 #[program]
 pub mod spl_token_mint_and_metadata {
@@ -62,6 +62,30 @@ pub mod spl_token_mint_and_metadata {
             signer_seeds,
         );
         mint_to(cpi_ctx, amount)?;
+        Ok(())
+    }
+
+    pub fn transfer_tokens(ctx: Context<TransferTokens>, amount: u64) -> Result<()> {
+        let cpi_accounts = Transfer {
+            from: ctx.accounts.sender_token_account.to_account_info(),
+            to: ctx.accounts.receiver_token_account.to_account_info(),
+            authority: ctx.accounts.sender.to_account_info()
+        };
+        let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
+        transfer(cpi_ctx, amount)?;
+        Ok(())
+    }
+
+    pub fn burn_tokens(ctx: Context<BurnTokens>, amount: u64) -> Result<()> {
+        let cpi_accounts = Burn {
+            from: ctx.accounts.from_token_account.to_account_info(),
+            mint: ctx.accounts.mint.to_account_info(),
+            authority: ctx.accounts.authority.to_account_info(),
+        };
+
+        let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
+
+        burn(cpi_ctx, amount);
         Ok(())
     }
 }
@@ -134,6 +158,47 @@ pub struct MintTokens<'info> {
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
+}
+
+#[derive(Accounts)]
+pub struct TransferTokens<'info> {
+    #[account(mut)]
+    pub sender: Signer<'info>,
+
+    #[account(mut)]
+    pub sender_token_account: Account<'info, TokenAccount>,
+
+    #[account(
+        init_if_needed,
+        payer = sender,
+        associated_token::mint = mint,
+        associated_token::authority = receiver,
+    )]
+    pub receiver_token_account: Account<'info, TokenAccount>,
+
+    /// CHECK: Only used for ATA derivation
+    pub receiver: AccountInfo<'info>,
+
+    pub mint: Account<'info, Mint>,
+
+    pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
+    pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>
+}
+
+
+#[derive(Accounts)]
+pub struct BurnTokens<'info> {
+    #[account(mut)]
+    pub from_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub mint: Account<'info, Mint>,
+
+    pub authority: Signer<'info>,
+
+    pub token_program: Program<'info, Token>,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Debug, Clone)]

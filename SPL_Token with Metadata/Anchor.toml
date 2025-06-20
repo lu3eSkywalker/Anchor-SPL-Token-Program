@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-spl_token_mint_and_metadata = "4wFum6NEKsgXZkYUiPjA2ECWj3Wjb4tYbC4yte4GBagB"
+spl_token_mint_and_metadata = "DngBV6YuyztBJucqPHTTHtTuk99jDc1yv7y8SQQKA53s"
 
 [registry]
 url = "https://api.apr.dev"
